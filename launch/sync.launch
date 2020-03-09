@@ -1,0 +1,9 @@
+<launch>
+  <node pkg="mocap_vislam_sync" type="mocap_vislam_sync" name="mocap_vislam_sync" output="screen" required = "true">
+        <param name="in_mocap_topic"  value="/optitrack/C0019/pose"/>
+        <param name="in_vislam_topic" value="/vislam/pose"/>
+
+        <param name="output_path" value="$(find mocap_vislam_sync)/outputs/"/>
+        
+  </node>
+</launch>
