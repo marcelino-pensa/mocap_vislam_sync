@@ -34,7 +34,7 @@ MocapVislamSync::MocapVislamSync(ros::NodeHandle *nh) {
 
 // Subscribe to synchronized messages from mocap localization and vislam
 void MocapVislamSync::PoseCallback(const geometry_msgs::PoseStamped::ConstPtr& mocap_msg,
-                                        const geometry_msgs::PoseStamped::ConstPtr& vislam_msg) {
+                                   const geometry_msgs::PoseStamped::ConstPtr& vislam_msg) {
     if (!is_estimating_) {
         return;
     }
@@ -43,6 +43,7 @@ void MocapVislamSync::PoseCallback(const geometry_msgs::PoseStamped::ConstPtr& m
         start_new_estimation_ = false;
         first_pos_mocap_  = msg_conversions::ros_point_to_eigen_vector(mocap_msg->pose.position);
         first_pos_vislam_ = msg_conversions::ros_point_to_eigen_vector(vislam_msg->pose.position);
+        initial_time_ = mocap_msg->header.stamp;
     }
 
     Eigen::Vector3d pos_mocap = 
@@ -52,6 +53,7 @@ void MocapVislamSync::PoseCallback(const geometry_msgs::PoseStamped::ConstPtr& m
         Eigen::Vector3d pos_mocap_fixed(pos_mocap[1], -pos_mocap[0], pos_mocap[2]);
     std::pair<Eigen::Vector3d, Eigen::Vector3d> pos_pair(pos_mocap_fixed, pos_vislam);
     position_pair_vec_.push_back(pos_pair);
+    times_.push_back((mocap_msg->header.stamp - initial_time_).toSec());
 
     // Debug printing
     printf("\r[%s]: Number of mocap/vislam pairs = %zd", node_name_.c_str(), position_pair_vec_.size());
@@ -85,9 +87,9 @@ bool MocapVislamSync::StopSyncSrv(std_srvs::Trigger::Request  &req,
     for (uint i = 0; i < position_pair_vec_.size(); i++) {
         Eigen::Vector3d mocap_pos  = position_pair_vec_[i].first;
         Eigen::Vector3d vislam_pos = position_pair_vec_[i].second;
-       x_file << mocap_pos[0] << ", " << vislam_pos[0] << std::endl;
-       y_file << mocap_pos[1] << ", " << vislam_pos[1] << std::endl;
-       z_file << mocap_pos[2] << ", " << vislam_pos[2] << std::endl;
+       x_file << mocap_pos[0] << ", " << vislam_pos[0] << ", " << times_[i] << std::endl;
+       y_file << mocap_pos[1] << ", " << vislam_pos[1] << ", " << times_[i] << std::endl;
+       z_file << mocap_pos[2] << ", " << vislam_pos[2] << ", " << times_[i] << std::endl;
     }
     x_file.close();
     y_file.close();

@@ -1,7 +1,7 @@
 <launch>
   <node pkg="mocap_vislam_sync" type="mocap_vislam_sync" name="lidar_vislam_sync" output="screen" required = "true">
         <param name="in_lidar_topic"  value="/hector_mapping/slam_out_pose"/>
-        <param name="in_vislam_topic" value="/mavros/vision_pose/pose"/>
+        <param name="in_vislam_topic" value="/vislam/vision_pose/pose"/>
 
         <param name="output_path" value="$(find mocap_vislam_sync)/outputs/"/>
   </node>
