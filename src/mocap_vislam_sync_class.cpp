@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <boost/filesystem.hpp>
+
 namespace sync_topics {
 
 MocapVislamSync::MocapVislamSync(ros::NodeHandle *nh) {
@@ -30,6 +32,15 @@ MocapVislamSync::MocapVislamSync(ros::NodeHandle *nh) {
         "/mocap_vislam_sync_class/start_sync", &MocapVislamSync::StartSyncSrv, this);
     stop_scale_estimation_srv_  = nh->advertiseService(
         "/mocap_vislam_sync_class/stop_sync", &MocapVislamSync::StopSyncSrv, this);
+
+    // Check if sync should start immediately
+    bool sync_at_start;
+    nh_.getParam("sync_at_start", sync_at_start);
+    if (sync_at_start) {
+        start_new_estimation_ = true;
+        is_estimating_ = true;
+        position_pair_vec_.clear();
+    }
 }
 
 // Subscribe to synchronized messages from mocap localization and vislam
@@ -47,11 +58,11 @@ void MocapVislamSync::PoseCallback(const geometry_msgs::PoseStamped::ConstPtr& m
     }
 
     Eigen::Vector3d pos_mocap = 
-        msg_conversions::ros_point_to_eigen_vector(mocap_msg->pose.position) - first_pos_mocap_;
+        msg_conversions::ros_point_to_eigen_vector(mocap_msg->pose.position);
     Eigen::Vector3d pos_vislam = 
-        msg_conversions::ros_point_to_eigen_vector(vislam_msg->pose.position) - first_pos_vislam_;
-        Eigen::Vector3d pos_mocap_fixed(pos_mocap[1], -pos_mocap[0], pos_mocap[2]);
-    std::pair<Eigen::Vector3d, Eigen::Vector3d> pos_pair(pos_mocap_fixed, pos_vislam);
+        msg_conversions::ros_point_to_eigen_vector(vislam_msg->pose.position);
+        // Eigen::Vector3d pos_mocap_fixed(pos_mocap[1], -pos_mocap[0], pos_mocap[2]);
+    std::pair<Eigen::Vector3d, Eigen::Vector3d> pos_pair(pos_mocap, pos_vislam);
     position_pair_vec_.push_back(pos_pair);
     times_.push_back((mocap_msg->header.stamp - initial_time_).toSec());
 
@@ -78,6 +89,9 @@ bool MocapVislamSync::StopSyncSrv(std_srvs::Trigger::Request  &req,
     uint n_meas;
     is_estimating_ = false;
     ROS_INFO("\nPrinting synced measurements to files in path %s", output_file_path_.c_str());
+
+    // Create path if it doesn't exist already
+    boost::filesystem::create_directories(output_file_path_);
 
     // Print measurements to file
     std::ofstream x_file, y_file, z_file;

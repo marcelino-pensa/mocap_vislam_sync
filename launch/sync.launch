@@ -1,9 +1,21 @@
 <launch>
+
+  <arg name="bag_path" default="/home/marcelino/Downloads/bags/sync_bags/v1_24"/>
+
+  <arg name="bag_name" default="flight_2020-03-30-16-10-12"/>
+  <arg name="bag_time" default="347"/>
+
   <node pkg="mocap_vislam_sync" type="mocap_vislam_sync" name="mocap_vislam_sync" output="screen" required = "true">
-        <param name="in_mocap_topic"  value="/optitrack/RigidBody/pose"/>
+        <param name="in_mocap_topic"  value="/optitrack/CindyP002/pose"/>
         <param name="in_vislam_topic" value="/vislam/pose"/>
 
-        <param name="output_path" value="$(find mocap_vislam_sync)/outputs/"/>
+        <param name="sync_at_start"  value="true"/>
+
+        <param name="output_path" value="$(find mocap_vislam_sync)/outputs/$(arg bag_name)/"/>
         
   </node>
+
+  <node name="playbag" pkg="rosbag" type="play"
+      args="$(arg bag_path)/$(arg bag_name).bag -s $(arg bag_time) -r 2 -d 1" />
+
 </launch>

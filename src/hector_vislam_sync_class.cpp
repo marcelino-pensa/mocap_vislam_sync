@@ -7,6 +7,8 @@
 #include <iostream>
 #include <fstream>
 
+#include <boost/filesystem.hpp>
+
 namespace sync_topics {
 
 HectorVislamSync::HectorVislamSync(ros::NodeHandle *nh) {
@@ -30,6 +32,15 @@ HectorVislamSync::HectorVislamSync(ros::NodeHandle *nh) {
         "/hector_vislam_sync_class/start_sync", &HectorVislamSync::StartSyncSrv, this);
     stop_scale_estimation_srv_  = nh->advertiseService(
         "/hector_vislam_sync_class/stop_sync", &HectorVislamSync::StopSyncSrv, this);
+
+    // Check if sync should start immediately
+    bool sync_at_start;
+    nh_.getParam("sync_at_start", sync_at_start);
+    if (sync_at_start) {
+        start_new_estimation_ = true;
+        is_estimating_ = true;
+        position_pair_vec_.clear();
+    }
 }
 
 // Subscribe to synchronized messages from lidar localization and vislam
@@ -77,6 +88,9 @@ bool HectorVislamSync::StopSyncSrv(std_srvs::Trigger::Request  &req,
     uint n_meas;
     is_estimating_ = false;
     ROS_INFO("\nPrinting synced measurements to files in path %s", output_file_path_.c_str());
+
+    // Create path if it doesn't exist already
+    boost::filesystem::create_directories(output_file_path_);
 
     // Print measurements to file
     std::ofstream x_file, y_file, z_file;
