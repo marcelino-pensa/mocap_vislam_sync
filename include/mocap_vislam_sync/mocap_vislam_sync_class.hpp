@@ -35,6 +35,7 @@ class MocapVislamSync {
     message_filters::Subscriber<geometry_msgs::PoseStamped>* mocap_sub_;
     message_filters::Subscriber<geometry_msgs::PoseStamped>* vislam_sub_;
     std::vector<std::pair<Eigen::Vector3d, Eigen::Vector3d> > position_pair_vec_;
+    std::vector<std::pair<double, double> > yaw_pair_vec_;
     std::vector<double> times_;
     ros::Time initial_time_;
     bool start_new_estimation_, is_estimating_;

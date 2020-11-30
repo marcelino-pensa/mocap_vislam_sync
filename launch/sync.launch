@@ -1,13 +1,11 @@
 <launch>
 
-  <arg name="bag_path" default="/home/marcelino/Downloads/bags/uwb_mocap"/>
-
-  <arg name="bag_name" default="new_location_3d_no_los"/>
-  <arg name="bag_time" default="0"/>
+  <arg name="bag_path" default="/home/marcelino/Downloads/bags/daisy_localization"/>
+  <arg name="bag_name" default="flight_2020-11-17-23-07-57"/>
 
   <node pkg="mocap_vislam_sync" type="mocap_vislam_sync" name="mocap_vislam_sync" output="screen" required = "true">
-        <param name="in_mocap_topic"  value="/optitrack/PozyxTag/pose"/>
-        <param name="in_vislam_topic" value="/pozyx/pose_0x6a56"/>
+        <param name="in_mocap_topic"  value="/optitrack/DE0002/pose"/>
+        <param name="in_vislam_topic" value="/mavros/vision_pose/pose"/>
 
         <param name="sync_at_start"  value="true"/>
 
@@ -15,7 +13,18 @@
         
   </node>
 
-  <node name="playbag" pkg="rosbag" type="play"
-      args="$(arg bag_path)/$(arg bag_name).bag -s $(arg bag_time) -r 2 -d 1" />
+  <include file="$(find bag_tools)/launch/play_bag_from_mission_start.launch">
+    <arg name="bag_path"    value="$(arg bag_path)" />
+    <arg name="bag_name"    value="$(arg bag_name).bag" />
+
+    <!-- Time offset, in case we want to advance the bag a few seconds into the future -->
+    <arg name="time_offset" value="0.0" />
+
+    <!-- Play rate (1.0 is normal speed, 2.0 is twice faster, 0.5 is half as fast) -->
+    <arg name="play_rate"   value="1.0" />
+
+    <!-- Delay in case we want to wait until start playing the bag (1sec suggested, so there's time for Rviz to launch) -->
+    <arg name="start_delay" value="1.0" />
+  </include>
 
 </launch>
