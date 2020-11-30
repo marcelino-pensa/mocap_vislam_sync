@@ -1,10 +1,10 @@
 <launch>
 
   <arg name="bag_path" default="/home/marcelino/Downloads/bags/daisy_localization"/>
-  <arg name="bag_name" default="flight_2020-11-17-23-07-57"/>
+  <arg name="bag_name" default="flight_2020-11-24-22-10-00"/>
 
   <node pkg="mocap_vislam_sync" type="mocap_vislam_sync" name="mocap_vislam_sync" output="screen" required = "true">
-        <param name="in_mocap_topic"  value="/optitrack/DE0002/pose"/>
+        <param name="in_mocap_topic"  value="/optitrack/de0002/pose"/>
         <param name="in_vislam_topic" value="/mavros/vision_pose/pose"/>
 
         <param name="sync_at_start"  value="true"/>

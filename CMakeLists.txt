@@ -35,8 +35,7 @@ include_directories(
   ${Eigen_INCLUDE_DIRS}
 )
 
-add_executable(mocap_vislam_sync src/hector_vislam_sync_class.cpp
-                                 src/mocap_vislam_sync_class.cpp
+add_executable(mocap_vislam_sync src/mocap_vislam_sync_class.cpp
                                  src/msg_conversions.cpp
                                  src/vislam_sync.cpp)
 target_link_libraries(mocap_vislam_sync ${catkin_LIBRARIES})
