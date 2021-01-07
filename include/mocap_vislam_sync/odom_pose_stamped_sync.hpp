@@ -40,7 +40,7 @@ class OdomPoseStampedSync {
     std::vector<double> times_;
     ros::Time initial_time_;
     bool start_new_estimation_, is_estimating_;
-    ros::ServiceServer start_scale_estimation_srv_, stop_scale_estimation_srv_;
+    ros::ServiceServer start_sync_srv_, stop_sync_srv_;
     std::string node_name_;
 
     // Callback that subscribes to both mocap and vislam measurements

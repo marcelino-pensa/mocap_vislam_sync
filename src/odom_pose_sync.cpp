@@ -2,7 +2,7 @@
 // Confidential and Proprietary
 
 #include "ros/ros.h"
-#include "mocap_vislam_sync/odom_posestamped_sync.hpp"
+#include "mocap_vislam_sync/odom_pose_stamped_sync.hpp"
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "odom_pose_stamped_sync");

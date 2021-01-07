@@ -28,9 +28,9 @@ MocapVislamSync::MocapVislamSync(ros::NodeHandle *nh) {
     sync_.reset(new Sync(SyncPolicyApprox(10), *mocap_sub_, *vislam_sub_));
     sync_->registerCallback(boost::bind(&MocapVislamSync::PoseCallback, this, _1, _2));
 
-    start_scale_estimation_srv_ = nh->advertiseService(
+    start_sync_srv_ = nh->advertiseService(
         "/mocap_vislam_sync_class/start_sync", &MocapVislamSync::StartSyncSrv, this);
-    stop_scale_estimation_srv_  = nh->advertiseService(
+    stop_sync_srv_  = nh->advertiseService(
         "/mocap_vislam_sync_class/stop_sync", &MocapVislamSync::StopSyncSrv, this);
 
     // Check if sync should start immediately

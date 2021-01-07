@@ -1,7 +1,7 @@
 // Copyright (c) 2020 by Pensa Systems, Inc. -- All rights reserved
 // Confidential and Proprietary
 
-#include "mocap_vislam_sync/odom_posestamped_sync.hpp"
+#include "mocap_vislam_sync/odom_pose_stamped_sync.hpp"
 
 #include <Eigen/Geometry>
 #include <iostream>
@@ -28,9 +28,9 @@ OdomPoseStampedSync::OdomPoseStampedSync(ros::NodeHandle *nh) {
     sync_.reset(new Sync(SyncPolicyApprox(10), *pose_stamped_sub_, *odometry_sub_));
     sync_->registerCallback(boost::bind(&OdomPoseStampedSync::PoseCallback, this, _1, _2));
 
-    start_scale_estimation_srv_ = nh->advertiseService(
+    start_sync_srv_ = nh->advertiseService(
         "/odom_posestamped_sync/start_sync", &OdomPoseStampedSync::StartSyncSrv, this);
-    stop_scale_estimation_srv_  = nh->advertiseService(
+    stop_sync_srv_  = nh->advertiseService(
         "/odom_posestamped_sync/stop_sync", &OdomPoseStampedSync::StopSyncSrv, this);
 
     // Check if sync should start immediately

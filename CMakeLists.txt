@@ -41,7 +41,7 @@ add_executable(mocap_vislam_sync src/mocap_vislam_sync_class.cpp
 target_link_libraries(mocap_vislam_sync ${catkin_LIBRARIES})
 add_dependencies(mocap_vislam_sync ${catkin_EXPORTED_TARGETS})
 
-add_executable(odom_pose_stamped_sync src/odom_posestamped_sync.cpp
+add_executable(odom_pose_stamped_sync src/odom_pose_stamped_sync.cpp
                                       src/msg_conversions.cpp
                                       src/odom_pose_sync.cpp)
 target_link_libraries(odom_pose_stamped_sync ${catkin_LIBRARIES})
