@@ -1,11 +1,11 @@
 <launch>
 
-  <arg name="bag_path" default="/home/marcelino/Downloads/bags/daisy_localization"/>
-  <arg name="bag_name" default="flight_2020-11-24-23-46-23"/>
+  <arg name="bag_path" default="/home/marcelino/Downloads/bags/spk147_t265_parameter_analysis"/>
+  <arg name="bag_name" default="baseline1"/>
 
-  <node pkg="mocap_vislam_sync" type="mocap_vislam_sync" name="mocap_vislam_sync" output="screen" required = "true">
-        <param name="in_mocap_topic"  value="/optitrack/de0002/pose"/>
-        <param name="in_vislam_topic" value="/mavros/vision_pose/pose"/>
+  <node pkg="mocap_vislam_sync" type="odom_pose_stamped_sync" name="odom_pose_stamped_sync" output="screen" required = "true">
+        <param name="in_pose_stamped_topic"  value="/optitrack/RigidBody/pose"/>
+        <param name="in_odometry_topic" value="/T265/odom/sample"/>
 
         <param name="sync_at_start"  value="true"/>
 
