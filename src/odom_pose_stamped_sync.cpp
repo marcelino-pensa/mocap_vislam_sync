@@ -98,12 +98,12 @@ bool OdomPoseStampedSync::StartSyncSrv(std_srvs::Trigger::Request  &req,
 
 bool OdomPoseStampedSync::StopSyncSrv(std_srvs::Trigger::Request  &req,
                                       std_srvs::Trigger::Response &res) {
+  is_estimating_ = false;
   if (output_file_path_.length() == 0) {
     ROS_WARN("No output path for Odometry/PoseStamped synchronized data. Will not save to file");
     return true;
   }
 
-  is_estimating_ = false;
   ROS_INFO("\nPrinting synced measurements to files in path %s", output_file_path_.c_str());
 
   // Create path if it doesn't exist already
