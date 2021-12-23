@@ -30,6 +30,7 @@ class OdomPoseStampedSync {
 
  private:
     ros::NodeHandle nh_;
+    ros::Publisher output_position_drift_pub_;
     std::string in_pose_stamped_topic_, in_odometry_topic_;
     std::string output_file_path_;
     boost::shared_ptr<Sync> sync_;

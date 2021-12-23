@@ -2,15 +2,18 @@
 
   <arg name="bag_path" default="/home/marcelino/Downloads/bags/spk147_t265_parameter_analysis"/>
   <arg name="bag_name" default="baseline1"/>
+  <arg name="in_odometry_topic" default="/T265/odom/sample"/>
+  <arg name="in_pose_stamped_topic" default="/optitrack/RigidBody/pose"/>
 
   <node pkg="mocap_vislam_sync" type="odom_pose_stamped_sync" name="odom_pose_stamped_sync" output="screen" required = "true">
-        <param name="in_pose_stamped_topic"  value="/optitrack/RigidBody/pose"/>
-        <param name="in_odometry_topic" value="/T265/odom/sample"/>
+    <param name="in_odometry_topic" value="$(arg in_odometry_topic)"/>
+    <param name="in_pose_stamped_topic" value="$(arg in_pose_stamped_topic)"/>
 
-        <param name="sync_at_start"  value="true"/>
+    <param name="sync_at_start" value="true"/>
 
-        <param name="output_path" value="$(find mocap_vislam_sync)/outputs/$(arg bag_name)/"/>
-        
+    <param name="output_path" value="$(find mocap_vislam_sync)/outputs/$(arg bag_name)/"/>
+
+    <param name="output_position_drift_topic" value="/odom_pose_drift" />
   </node>
 
   <include file="$(find bag_tools)/launch/play_bag_from_mission_start.launch">

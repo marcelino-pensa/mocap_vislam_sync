@@ -9,7 +9,9 @@
 
 namespace msg_conversions {
 
-  Eigen::Vector3d ros_point_to_eigen_vector(const geometry_msgs::Point & p);
+  Eigen::Vector3d ros_point_to_eigen_vector(const geometry_msgs::Point &p);
+
+  geometry_msgs::Point eigen_vector_to_ros_point(const Eigen::Vector3d &v);
 
   double GetYawFromQuat(const geometry_msgs::Quaternion &quat);
 
