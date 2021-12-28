@@ -79,8 +79,7 @@ void OdomPoseStampedSync::PoseCallback(const geometry_msgs::PoseStamped::ConstPt
   times_.push_back((pose_stamped_msg->header.stamp - initial_time_).toSec());
 
   // Debug printing
-  printf("\r[%s]: Number of mocap/vislam pairs = %zd", node_name_.c_str(), position_pair_vec_.size());
-  std::fflush(stdout);
+  ROS_INFO_THROTTLE(1.0, "[%s]: Number of mocap/vislam pairs = %zd", node_name_.c_str(), position_pair_vec_.size());
 }
 
 bool OdomPoseStampedSync::StartSyncSrv(std_srvs::Trigger::Request  &req,
